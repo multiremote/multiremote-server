@@ -1,6 +1,7 @@
 package net.multiremote.server.service;
 
 import java.util.List;
+import java.util.Optional;
 import net.multiremote.server.data.UserEO;
 
 /**
@@ -9,7 +10,7 @@ import net.multiremote.server.data.UserEO;
  */
 public interface UserService {
 
-	UserEO findByLogin(String login);
+	Optional<UserEO> findByLogin(String login);
 
 	List<UserEO> getAllUsers();
 

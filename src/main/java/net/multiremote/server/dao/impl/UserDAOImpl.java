@@ -1,12 +1,18 @@
 package net.multiremote.server.dao.impl;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import net.multiremote.server.dao.UserDao;
 import net.multiremote.server.data.UserEO;
+import net.multiremote.server.data.root.Users;
 import org.apache.log4j.Logger;
-import org.hibernate.Query;
 import org.hibernate.SessionFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -18,7 +24,7 @@ public class UserDAOImpl extends AbstractDAO<UserEO> implements UserDao {
 
 	private static final Logger LOG = Logger.getLogger(UserDAOImpl.class);
 
-	@Autowired
+	//@Autowired
 	private SessionFactory sessionFactory;
 
 	public UserDAOImpl() {
@@ -26,19 +32,23 @@ public class UserDAOImpl extends AbstractDAO<UserEO> implements UserDao {
 	}
 
 	@Override
-	public UserEO getByLogin(String login) {
-		Query query = sessionFactory.getCurrentSession().createQuery(UserEO.FIND_BY_LOGIN);
-		query.setParameter(UserEO.PARAM_LOGIN, login);
-		return (UserEO) query.uniqueResult();
+	public Optional<UserEO> getByLogin(String login) {
+		if(login==null){
+			return Optional.empty();
+		}
+		return getAllUsers().stream().filter(u -> login.equalsIgnoreCase(u.getLogin())).findFirst();
 	}
 
 	@Override
 	public List<UserEO> getAllUsers() {
-		return findAllEntities();
-	}
-
-	@Override
-	public UserEO getById(Integer id) {
-		return super.getById(id);
+		try {
+			JAXBContext context = JAXBContext.newInstance(Users.class);
+			Unmarshaller um = context.createUnmarshaller();
+			Users users = (Users) um.unmarshal(new FileReader("config/users.xml"));
+			return users.getUsers();
+		} catch (JAXBException | FileNotFoundException ex) {
+			LOG.error("Cannot read users", ex);
+		}
+		return new ArrayList<>();
 	}
 }

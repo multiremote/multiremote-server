@@ -1,6 +1,7 @@
 package net.multiremote.server.dao;
 
 import java.util.List;
+import java.util.Optional;
 import net.multiremote.server.data.UserEO;
 /**
  *
@@ -8,7 +9,7 @@ import net.multiremote.server.data.UserEO;
  */
 public interface UserDao {
 
-	UserEO getById(Integer id);
-	UserEO getByLogin(String login);
+	Optional<UserEO> getById(Integer id);
+	Optional<UserEO> getByLogin(String login);
 	List<UserEO> getAllUsers();
 }

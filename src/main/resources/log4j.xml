@@ -24,22 +24,26 @@
 		<level value="INFO"/>
 	</logger>
 	
-	<!--<logger name="org.springframework.security">
+	<!--<logger name="org.springframework.transaction">
 		<level value="DEBUG"/>
-	</logger>-->
+	</logger>
 	
-	<logger name="net.collaud.fablab.api">
+	<logger name="org.springframework.security">
+		<level value="DEBUG"/>
+	</logger>
+	
+	<logger name="org.hibernate" >
+		<level value="DEBUG"/>
+	</logger>
+	-->
+	
+	<logger name="net.multiremote">
 		<level value="DEBUG"/>
 	</logger>
 	
 	<logger name="org.eclipse.jetty" additivity="false">
 		<level value="INFO"/>
 	</logger>
-	
-	<logger name="org.hibernate" >
-		<level value="INFO"/>
-	</logger>
-	
 	
 	<root>
 		<level value="INFO" />

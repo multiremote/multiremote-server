@@ -1,6 +1,7 @@
 package net.multiremote.server.service.impl;
 
 import java.util.List;
+import java.util.Optional;
 import net.multiremote.server.dao.UserDao;
 import net.multiremote.server.data.UserEO;
 import net.multiremote.server.service.AbstractServiceImpl;
@@ -23,9 +24,9 @@ public class UserServiceImpl extends AbstractServiceImpl implements UserService 
 	private UserDao userDao;
 
 	@Override
-	public UserEO findByLogin(String login){
+	public Optional<UserEO> findByLogin(String login){
 		if(login==null || login.isEmpty()){
-			return null;
+			return Optional.empty();
 		}
 		return userDao.getByLogin(login);
 	}

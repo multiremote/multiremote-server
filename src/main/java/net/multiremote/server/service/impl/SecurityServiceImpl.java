@@ -1,6 +1,5 @@
 package net.multiremote.server.service.impl;
 
-import javax.transaction.Transactional;
 import net.multiremote.server.dao.UserDao;
 import net.multiremote.server.data.UserEO;
 import net.multiremote.server.data.type.LoginResult;
@@ -17,6 +16,7 @@ import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  *
@@ -37,7 +37,7 @@ public class SecurityServiceImpl extends AbstractServiceImpl implements Security
 	@Override
 	public UserEO getCurrentUser() {
 		Integer id = getCurrentUserId();
-		return userDao.getById(id);
+		return userDao.getById(id).get();
 	}
 
 	@Override
@@ -65,12 +65,13 @@ public class SecurityServiceImpl extends AbstractServiceImpl implements Security
 			SecurityContextHolder.getContext().setAuthentication(auth);
 			return LoginResult.OK;
 		}catch(BadCredentialsException ex){
-			LOG.warn("Wrong password for login "+login, ex);
+			LOG.warn("Wrong password for login "+login);
 			return LoginResult.WRONG_PASSWORD;
 		}catch(UsernameNotFoundException ex){
-			LOG.warn("Login "+login+" not found", ex);
+			LOG.warn("Login "+login+" not found");
 			return LoginResult.UNKNOWN_USERNAME;
 		} catch (AuthenticationException ex) {
+			LOG.error(ex);
 			return LoginResult.INTERNAL_ERROR;
 		}
 	}
@@ -79,7 +80,4 @@ public class SecurityServiceImpl extends AbstractServiceImpl implements Security
 	public void logout() {
 		SecurityContextHolder.clearContext();
 	}
-	
-	
-
 }
